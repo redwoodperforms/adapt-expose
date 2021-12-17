@@ -1,4 +1,4 @@
-define(function(require) {
+define(function (require) {
 
 	function toHyphenCase(str) {
 		if (!str) return false;
@@ -15,28 +15,28 @@ define(function(require) {
 			"click .expose-item-button": "toggleItem"
 		},
 
-		onDeviceResize: function() {
+		onDeviceResize: function () {
 			this.setupColumns();
 			this.setEqualHeights();
 		},
 
-		preRender: function() {
+		preRender: function () {
 			this.animationType = toHyphenCase(this.model.get("_animationType")) || "fade";
 		},
 
-		postRender: function() {
+		postRender: function () {
 			this.$(".expose-item").children().addClass(this.animationType);
 			this.setupColumns();
 			this.setupEventListeners();
 			this.$(".expose-item-img").imageready(_.bind(this.onImageReady, this));
 		},
-		
-		onImageReady: function() {
+
+		onImageReady: function () {
 			this.setEqualHeights();
 			this.setReadyStatus();
 		},
 
-		setupColumns: function() {
+		setupColumns: function () {
 			if (this.model.get("_columns") && $(window).width() > 760) {
 				var w = 100 / this.model.get("_columns") + "%";
 				this.$(".expose-items").addClass("expose-columns");
@@ -50,24 +50,44 @@ define(function(require) {
 		setEqualHeights: function () {
 			if (this.model.get("_equalHeights") === false) return;
 			var $contentElements = this.$(".expose-item-content");
-			$contentElements.height('auto'); 
+			$contentElements.height('auto');
 			var hMax = 0;
-			_.each($contentElements, function(el) {
+			_.each($contentElements, function (el) {
 				var h = $(el).outerHeight();
 				if (h > hMax) hMax = h;
 			});
 			$contentElements.height(hMax);
 		},
-		
-		setupEventListeners: function() {
-			this.listenTo(Adapt, {'device:resize': this.onDeviceResize});
+
+		setupEventListeners: function () {
+			this.listenTo(Adapt, { 'device:resize': this.onDeviceResize });
 		},
 
-		toggleItem: function(e) {
+		toggleItem: function (e) {
 			if (e.target.tagName === "A") return;
+			// this.$(".expose-item-content").attr('aria-hidden', true);
+
 			var $parent = $(e.currentTarget).parent();
 			var $cover = $parent.children(".expose-item-cover");
+			var $coverButton = $parent.children(".expose-item-button");
+			var $content = $parent.children(".expose-item-content");
+
 			$cover.toggleClass(this.animationType);
+			// $parent.children(".expose-item-cover").addClass("display-none");
+
+			if ($cover.hasClass(this.animationType)) {
+				$cover.attr('aria-hidden', true);
+				$content.attr('aria-hidden', false);
+				$content.a11y_focus();
+				_.delay(function () {
+					$coverButton.attr('aria-hidden', true).css('visibility', 'hidden');
+				}, 100);
+			} else {
+				$cover.attr('aria-hidden', false);
+				$coverButton.attr('aria-hidden', false).css('visibility', 'visible');
+				$content.attr('aria-hidden', true);
+			}
+
 			if (!$cover.is(".visited")) {
 				$cover.addClass("visited");
 				var i = $cover.parents(".expose-item").index();
@@ -76,14 +96,14 @@ define(function(require) {
 			}
 		},
 
-		evaluateCompletion: function() {
-			var incompleteItems = _.filter(this.model.get("_items"), function(item) {
+		evaluateCompletion: function () {
+			var incompleteItems = _.filter(this.model.get("_items"), function (item) {
 				return !item._isVisited;
 			});
 			!incompleteItems.length && this.onComplete();
 		},
 
-		onComplete: function() {
+		onComplete: function () {
 			this.setCompletionStatus();
 
 		}

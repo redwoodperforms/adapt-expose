@@ -27,12 +27,13 @@
       "default": "",
       "inputType": "Text",
       "validators": [],
-      "help": "This is the instruction text"
+      "help": "This is the instruction text",
+      "translatable": true
     },
     "_columns": {
       "type": "string",
       "required": false,
-      "title": "Number of Columns",
+      "title": "Width",
       "default": "",
       "inputType": "Number",
       "validators": ["number"],
@@ -42,10 +43,10 @@
       "type": "string",
       "required": false,
       "title": "Animation Type",
-      "default": "shrink",
+      "default": "fade",
       "inputType": {
         "type": "Select",
-        "options": ["fade", "shrink", "flipUp", "flipLeft", "slideUp", "slideDown", "slideLeft", "slideRight"]
+        "options": ["fade", "flipUp", "flipLeft", "slideUp", "slideDown", "slideLeft", "slideRight"]
       },
       "help": "This determines how the front cover animates when clicked on"
     },

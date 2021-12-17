@@ -14,7 +14,7 @@
 	position: relative;
 	perspective: 1000px;
 	margin-bottom: 20px;
-	cursor: pointer;
+	//cursor: pointer;
 
 	&.slide-down,
 	&.slide-left,
@@ -83,6 +83,10 @@
 			background: @primary-color;
 			-webkit-backface-visibility: hidden;
 			backface-visibility: hidden;
+            cursor: pointer;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
 		}
 
 		.back {
